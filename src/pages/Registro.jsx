@@ -3,8 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Form, Button, FormGroup, FormCheck,Nav, Navbar, NavLink, } from 'react-bootstrap';
 import { Envelope, Person, Lock } from 'react-bootstrap-icons';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../componentes/logo.png';
+
 
 function Registro() {
   const [registroData, setRegistroData] = useState({
@@ -14,7 +15,7 @@ function Registro() {
     contrasena: '',
     terminos: false
   })
-
+  const navigate= useNavigate();
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (event) => {
@@ -41,6 +42,7 @@ function Registro() {
             terminos: false
           });
           alert('Datos han sido guardados correctamente.');
+          navigate('/inicio');
         } else {
           console.error('Error al enviar los datos del formulario:', response);
         }
