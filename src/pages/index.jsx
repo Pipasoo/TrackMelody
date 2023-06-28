@@ -30,14 +30,17 @@ function Index() {
         </Navbar>
       </header>
       <section className="welcome">
-        <p style={{ textAlign: 'center', fontSize: '5rem' }}>
-          <span className="badge bg-mine">Track Melody</span>
+        <p className="text-center">
+          <h1 className="badge bg-mine" >
+            Track Melody
+          </h1>
         </p>
+
         <img class="rounded-circle" src={listening} />
       </section>
       <div className="d-flex margenCard">
-        <Card className="text-bg-light mb-3 premiumCard" style={{ maxWidth: '18rem' }}>
-          <Card.Header style={{ fontSize: '1.8rem' }}>¿Por qué hay anuncios?</Card.Header>
+        <Card className="text-bg-light mb-3 premiumCard" style={{ maxWidth: '25rem' }}>
+          <Card.Header  class="titles">¿Por qué hay anuncios?</Card.Header>
           <Card.Body>
             <Card.Title>Para ayudar a familias y niños</Card.Title>
             <Card.Text>
@@ -45,8 +48,8 @@ function Index() {
             </Card.Text>
           </Card.Body>
         </Card>
-        <Card className="text-bg-light mb-3 premiumCard" style={{ maxWidth: '18rem' }}>
-          <Card.Header style={{ fontSize: '1.8rem' }}>¿Quieres ayudar a niños y niñas?</Card.Header>
+        <Card className="text-bg-light mb-3 premiumCard" style={{ maxWidth: '25rem' }}>
+          <Card.Header class="titles">¿Quieres ayudar a niños y niñas?</Card.Header>
           <Card.Body>
             <Card.Title>Escucha música con nosotros</Card.Title>
             <Card.Text>
@@ -54,8 +57,8 @@ function Index() {
             </Card.Text>
           </Card.Body>
         </Card>
-        <Card className="text-bg-light mb-3 premiumCard" style={{ maxWidth: '18rem' }}>
-          <Card.Header style={{ fontSize: '1.8rem' }}>¿Quieres ayudar a la causa pero no quieres anuncios?</Card.Header>
+        <Card className="text-bg-light mb-3 premiumCard" style={{ maxWidth: '25rem' }}>
+          <Card.Header class="titles">¿Quieres ayudar a la causa pero no quieres anuncios?</Card.Header>
           <Card.Body>
             <Card.Title>Así es, puedes ayudar con un plan</Card.Title>
             <Card.Text>
