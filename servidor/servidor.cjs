@@ -7,6 +7,12 @@ const fs = require('fs');
 const app = express();
 const PORT = 3000;
 
+// Función para encriptar una contraseña utilizando SHA-256
+function encriptarContraseña(contraseña) {
+  const hash = SHA256(contraseña).toString();
+  return hash;
+}
+
 // Middleware para analizar los cuerpos de las solicitudes
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -39,12 +45,27 @@ app.use(function(req, res, next) {
   next();
 });
 
-// Ruta para guardar los datos del formulario en un archivo JSON
+// Middleware de autenticación con token
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token === 'tu_token_de_acceso') { // Reemplaza 'tu_token_de_acceso' con tu token real
+    next();
+  } else {
+    res.sendStatus(401); // Unauthorized
+  }
+};
+
 // Ruta para guardar los datos del formulario en un archivo JSON
 app.post('/api/registro', (req, res) => {
   const formData = req.body;  
   const { nombre, apellido, email, contrasena } = req.body;
   const query = `INSERT INTO usuarios (name, apellido, correo, contrasena) VALUES (?, ?, ?, ?)`;
+
+  // Encriptar la contraseña
+  const contraseñaEncriptada = encriptarContraseña(formData.password);
+  formData.password = contraseñaEncriptada;
 
   connection.query(query, [nombre, apellido, email, contrasena], (err, results) => {
     if (err) {
