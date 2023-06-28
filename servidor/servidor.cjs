@@ -1,8 +1,9 @@
 const express = require('express');
-const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const SHA256 = require("crypto-js/sha256");
+const mysql = require('mysql');
 
 const app = express();
 const PORT = 3000;
@@ -33,7 +34,6 @@ connection.connect((err) => {
   console.log('Conexión exitosa a la base de datos!');
 });
 
-
 app.use(cors({
   origin: 'http://localhost:5173',
   optionsSuccessStatus: 200 // Some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -41,7 +41,7 @@ app.use(cors({
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Incluye Authorization en los headers permitidos
   next();
 });
 
@@ -58,16 +58,15 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Ruta para guardar los datos del formulario en un archivo JSON
-app.post('/api/registro', (req, res) => {
+app.post('/api/registro', authenticateToken, (req, res) => {
   const formData = req.body;  
   const { nombre, apellido, email, contrasena } = req.body;
   const query = `INSERT INTO usuarios (name, apellido, correo, contrasena) VALUES (?, ?, ?, ?)`;
 
   // Encriptar la contraseña
-  const contraseñaEncriptada = encriptarContraseña(formData.password);
-  formData.password = contraseñaEncriptada;
+  const contraseñaEncriptada = encriptarContraseña(contrasena);
 
-  connection.query(query, [nombre, apellido, email, contrasena], (err, results) => {
+  connection.query(query, [nombre, apellido, email, contraseñaEncriptada], (err, results) => {
     if (err) {
       console.error('Error al insertar los datos en la base de datos: ', err);
       res.status(500).json({ error: 'Error interno del servidor' });
@@ -94,7 +93,6 @@ app.post('/api/registro', (req, res) => {
     res.json({ message: 'Los datos del formulario se han guardado correctamente' });
   });
 });
- 
 
 // Método GET para obtener los datos del formulario desde el archivo JSON
 app.get('/api/registro', (req, res) => {
@@ -142,6 +140,7 @@ app.put('/api/registro', (req, res) => {
 });
 
 // Inicia el servidor
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+app.listen(PORT, () => {
+  console.log('Server is running on port ' + PORT);
 });
+
