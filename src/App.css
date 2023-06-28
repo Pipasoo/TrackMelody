@@ -121,3 +121,54 @@ main{
 .icon, .link_text{
   font-size: 20px;
 }
+
+@media (max-width: 2048px) {
+  .badge {
+    font-size: 9rem;
+  }
+  .titles{
+    font-size: 4rem;
+  }
+}
+
+@media (max-width: 1356px) {
+  .badge {
+    font-size: 5rem;
+  }
+  .titles{
+    font-size: 2rem;
+  }
+  .rounded-circle{
+    max-width: 756px;
+  }
+}
+
+@media (max-width: 750px) {
+  .badge {
+    font-size: 4rem;
+  }
+  .titles{
+    font-size: 2rem;
+  }
+  .rounded-circle{
+    max-width: 576px;
+  }
+}
+
+
+@media (max-width: 576px) {
+  .badge {
+    font-size: 3rem;
+  }
+  .rounded-circle{
+    max-width: 460px;
+  }
+}
+@media (max-width: 460px) {
+  .badge {
+    font-size: 2rem;
+  }
+  .rounded-circle{
+    max-width: 360px;
+  }
+}
