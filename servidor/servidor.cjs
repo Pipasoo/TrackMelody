@@ -17,12 +17,24 @@ app.use(cors({
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Incluye Authorization en los headers permitidos
   next();
 });
 
+// Middleware de autenticación con token
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token === 'tu_token_de_acceso') { // Reemplaza 'tu_token_de_acceso' con tu token real
+    next();
+  } else {
+    res.sendStatus(401); // Unauthorized
+  }
+};
+
 // Ruta para guardar los datos del formulario en un archivo JSON
-app.post('/api/registro', (req, res) => {
+app.post('/api/registro', authenticateToken, (req, res) => {
   const formData = req.body;  
 
   // Lee el archivo JSON existente (si existe)
