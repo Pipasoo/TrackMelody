@@ -4,12 +4,23 @@ import { Container, Form, Button, Nav, Navbar, NavLink } from 'react-bootstrap';
 import { Envelope, Lock } from 'react-bootstrap-icons';
 import logo from '../componentes/logo.png';
 import { Link } from 'react-router-dom';
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Login() {
   const [datos, setDatos] = useState({});
+  const [captchaValue, setCaptchaValue] = useState("");
+  
+  const handleSubmit = e =>{
+    e.preventDefault();
+
+    if(captchaValue === "") {
+      alert("Porfavor, completa el CAPTCHA.");
+      return;
+    }
+  }
 
   useEffect(() => {
-    fetch('../Registro.json')
+    fetch('../registro.json')
       .then(response => response.json())
       .then(data => {
         setDatos(data);
@@ -65,7 +76,13 @@ function Login() {
                 onChange={e => setDatos({ ...datos, contrasena: e.target.value })}
               />
             </Form.Group>
-            <Button variant="primary" type="submit">Enviar</Button>
+            <Button variant="primary" type="submit" disabled={captchaValue === ""}>Enviar</Button>
+            <Form.Group className = "mb-3 text-start">
+              <ReCAPTCHA
+              sitekey = "6Lfq29UmAAAAAKakZzfrL95yITC6hviZmXBbEBU2"
+              onchange={value => setCaptchaValue(value)}
+              />
+            </Form.Group>
           </Form>
         </div>
       </Container>
