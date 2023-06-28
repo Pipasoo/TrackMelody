@@ -4,20 +4,40 @@ import { Container, Form, Button, Nav, Navbar, NavLink } from 'react-bootstrap';
 import { Envelope, Lock } from 'react-bootstrap-icons';
 import logo from '../componentes/logo.png';
 import { Link } from 'react-router-dom';
-import ReCAPTCHA from "react-google-recaptcha";
+import Recaptcha from "react-recaptcha";
+import axios from 'axios';
+
 
 function Login() {
   const [datos, setDatos] = useState({});
   const [captchaValue, setCaptchaValue] = useState("");
   
-  const handleSubmit = e =>{
+  const handleSubmit = e => {
     e.preventDefault();
-
-    if(captchaValue === "") {
-      alert("Porfavor, completa el CAPTCHA.");
+  
+    if (captchaValue === '') {
+      alert('Por favor, completa el reCAPTCHA.');
       return;
     }
-  }
+  
+    axios
+      .post('/verify-recaptcha', { recaptchaResponse: captchaValue })
+      .then(response => {
+        const { success } = response.data;
+  
+        if (success) {
+          // El reCAPTCHA es válido, puedes continuar con el envío del formulario
+          // Resto del código para enviar los datos del formulario
+        } else {
+          // El reCAPTCHA es inválido
+          alert('El reCAPTCHA es inválido. Por favor, inténtalo nuevamente.');
+        }
+      })
+      .catch(error => {
+        console.error('Error al verificar el reCAPTCHA:', error);
+        alert('Ocurrió un error al verificar el reCAPTCHA. Por favor, inténtalo nuevamente.');
+      });
+  };
 
   useEffect(() => {
     fetch('../registro.json')
@@ -76,13 +96,14 @@ function Login() {
                 onChange={e => setDatos({ ...datos, contrasena: e.target.value })}
               />
             </Form.Group>
-            <Button variant="primary" type="submit" disabled={captchaValue === ""}>Enviar</Button>
-            <Form.Group className = "mb-3 text-start">
-              <ReCAPTCHA
-              sitekey = "6Lfq29UmAAAAAKakZzfrL95yITC6hviZmXBbEBU2"
-              onchange={value => setCaptchaValue(value)}
-              />
-            </Form.Group>
+            <Button variant="primary" type="submit" onClick={handleSubmit} disabled={captchaValue === "" }>Enviar</Button>
+            <Form.Group className="mb-3 text-start">
+            <Recaptcha
+              sitekey="6Lfq29UmAAAAAKakZzfrL95yITC6hviZmXBbEBU2"
+              render="explicit"
+              verifyCallback={response => setCaptchaValue(response)}
+            />
+          </Form.Group>
           </Form>
         </div>
       </Container>
