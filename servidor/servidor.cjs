@@ -1,4 +1,5 @@
 const express = require('express');
+const mysql = require('mysql');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -7,8 +8,25 @@ const app = express();
 const PORT = 3000;
 
 // Middleware para analizar los cuerpos de las solicitudes
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'wggB]f9hiX7gFBt9',
+  database: 'trackmelody'
+});
+
+connection.connect((err) => {
+  if (err) {
+    console.error('Error al conectar a la base de datos: ', err);
+    return;
+  }
+
+  console.log('Conexión exitosa a la base de datos!');
+});
+
 
 app.use(cors({
   origin: 'http://localhost:5173',
@@ -17,43 +35,45 @@ app.use(cors({
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Incluye Authorization en los headers permitidos
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
 
-// Middleware de autenticación con token
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (token === 'tu_token_de_acceso') { // Reemplaza 'tu_token_de_acceso' con tu token real
-    next();
-  } else {
-    res.sendStatus(401); // Unauthorized
-  }
-};
-
 // Ruta para guardar los datos del formulario en un archivo JSON
-app.post('/api/registro', authenticateToken, (req, res) => {
+// Ruta para guardar los datos del formulario en un archivo JSON
+app.post('/api/registro', (req, res) => {
   const formData = req.body;  
+  const { nombre, apellido, email, contrasena } = req.body;
+  const query = `INSERT INTO usuarios (name, apellido, correo, contrasena) VALUES (?, ?, ?, ?)`;
 
-  // Lee el archivo JSON existente (si existe)
-  let existingData = [];
-  try {
-    const data = fs.readFileSync('registro.json');
-    existingData = JSON.parse(data);
-  } catch (error) {
-    console.log('No se encontró ningún archivo JSON existente');
-  }
+  connection.query(query, [nombre, apellido, email, contrasena], (err, results) => {
+    if (err) {
+      console.error('Error al insertar los datos en la base de datos: ', err);
+      res.status(500).json({ error: 'Error interno del servidor' });
+      return;
+    }
 
-  // Agrega los nuevos datos al arreglo existente
-  existingData.push(formData);
+    console.log("Datos enviados a la BD :)");
 
-  // Guarda los datos en el archivo JSON
-  fs.writeFileSync('registro.json', JSON.stringify(existingData));
+    // Lee el archivo JSON existente (si existe)
+    let existingData = [];
+    try {
+      const data = fs.readFileSync('registro.json');
+      existingData = JSON.parse(data);
+    } catch (error) {
+      console.log('No se encontró ningún archivo JSON existente');
+    }
 
-  res.json({ message: 'Los datos del formulario se han guardado correctamente' });
+    // Agrega los nuevos datos al arreglo existente
+    existingData.push(formData);
+
+    // Guarda los datos en el archivo JSON
+    fs.writeFileSync('registro.json', JSON.stringify(existingData));
+
+    res.json({ message: 'Los datos del formulario se han guardado correctamente' });
+  });
 });
+ 
 
 // Método GET para obtener los datos del formulario desde el archivo JSON
 app.get('/api/registro', (req, res) => {
