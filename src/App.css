@@ -40,6 +40,15 @@
   padding-top: 2em !important;
 }
 
+/*Side Bar */
+.sidebar {
+  text-align: left;
+  width: 14em;
+  height: 100vh;
+  background-color: #1d0628;
+  padding: 20px;
+}
+
 ul {
   list-style-type: none;
   padding: 2em;
@@ -74,55 +83,7 @@ li {
   color: #000000;
 }
 
-.containerR{
-  display:flex;
-}
-main{
-  width: 100%;
-  padding: 20px;
-}
-.sidebar{
-  background-color: #1d0628;
-  color: #fff;
-  height: 100vh;
-  width: 200px;
-  transition: all 0.5s;
-  
-}
-.top_section{
-  display: flex;
-  align-items:center;
-  padding:20px 15px;
-}
-.logo{
-  font-size: 30px;
-}
-.bars{
-  display: flex;
-  font-size: 25px;
-  margin-left: 50px;
-}
-.link{
-  display: flex;
-  color: #fff;
-  padding: 10px 15px;
-  gap: 15px;
-  transition: all 0.5s;
-}
-.link:hover{
-  background:#300742;
-  color: pink;
-  transition: all 0.5s;
-}
-.active{
-  background: #300742;
-  color: pink;
-}
-.icon, .link_text{
-  font-size: 20px;
-}
-
-@media (max-width: 2048px) {
+@media (max-width: 2848px) {
   .badge {
     font-size: 9rem;
   }

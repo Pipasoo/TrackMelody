@@ -3,9 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Form, Button, FormGroup, FormCheck,Nav, Navbar, NavLink, } from 'react-bootstrap';
 import { Envelope, Person, Lock } from 'react-bootstrap-icons';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
 import logo from '../componentes/logo.png';
-
+import { Link, useNavigate } from 'react-router-dom';
 
 function Registro() {
   const [registroData, setRegistroData] = useState({
